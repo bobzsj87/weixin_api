@@ -360,6 +360,40 @@ Weixin.prototype.sendNewsMsg = function(msg) {
 	return this;
 }
 
+// ------------------- 发送客服消息 -----------------------
+// 发送文本消息
+Weixin.prototype.pushTextMsg = function(wechatId, successCallback) {
+	var self = this;
+	var pushChatURL = "https://api.wechat.com/cgi-bin/message/custom/send?access_token="+self.ACCESS_TOKEN;
+	var pushChatOptions = {
+		method: "POST",
+		url: pushChatURL,
+		body: JSON.stringify({
+			"touser" : wechatId,
+			"msgtype" : "text",
+			"text" :
+			{
+				"content" : formatted_message
+			}
+		})
+	};
+
+	function pushChatCallback (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			bodyObject = JSON.parse(body);
+			if (bodyObject.errmsg === "ok") {
+				console.log("Message successfully delivered--" + formatted_message);
+				successCallback();
+			} else {
+				console.log("There was an error delivering the message: " + formatted_message);
+			}
+		}
+	}
+
+	request(pushChatOptions, pushChatCallback);
+}
+
+
 // ------------ 主逻辑 -----------------
 // 解析
 Weixin.prototype.parse = function() {
