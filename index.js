@@ -37,6 +37,31 @@ Weixin.prototype.checkSignature = function(req) {
 	}
 }
 
+// 每一个小时更新access token一次
+Weixin.prototype.refreshToken = function() {
+	getToken();
+	setInterval(getToken, 3600000);
+
+	function getToken() {
+		var accessTokenURL = "https://api.wechat.com/cgi-bin/token?grant_type=client_credential&appid="+this.APP_ID+"&secret="+this.APP_SECRET;
+		var accessTokenOptions = {
+			method: "GET",
+			url: accessTokenURL,
+		};
+
+		function accessTokenCallback (error, response, body) {
+			if (!error && response.statusCode == 200) {
+				var data = JSON.parse(body);
+				this.ACCESS_TOKEN = new Object();
+				this.ACCESS_TOKEN.access_token = data.access_token;
+				this.ACCESS_TOKEN.expiration = (new Date().getTime()) + (data.expires_in - 10) * 1000;
+				console.log("New access token retrieved: " + this.ACCESS_TOKEN.access_token);
+			}
+		}
+		request(accessTokenOptions, accessTokenCallback);
+	}
+}
+
 // ------------------ 监听 ------------------------
 // 监听文本消息
 Weixin.prototype.textMsg = function(callback) {
