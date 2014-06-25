@@ -48,6 +48,7 @@ Weixin.prototype.refreshToken = function() {
 			method: "GET",
 			url: accessTokenURL,
 		};
+		console.log(accessTokenURL);
 
 		function accessTokenCallback (error, response, body) {
 			if (!error && response.statusCode == 200) {
