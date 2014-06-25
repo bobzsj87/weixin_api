@@ -1,6 +1,9 @@
+/// is this thing doing anything
+
 var sha1 = require('sha1'),
 	events = require('events'),
 	emitter = new events.EventEmitter(),
+	request = require('request'),
 	xml2js = require('xml2js');
 	
 // 微信类
@@ -49,6 +52,14 @@ Weixin.prototype.textMsg = function(callback) {
 Weixin.prototype.imageMsg = function(callback) {
 	
 	emitter.on("weixinImageMsg", callback);
+	
+	return this;
+}
+
+// 监听语音消息
+Weixin.prototype.voiceMsg = function(callback) {
+	
+	emitter.on("weixinVoiceMsg", callback);
 	
 	return this;
 }
@@ -122,6 +133,32 @@ Weixin.prototype.parseImageMsg = function() {
 	}
 	
 	emitter.emit("weixinImageMsg", msg);
+	
+	return this;
+}
+
+/*
+ * 语音消息格式：
+ * ToUserName	 开发者微信号
+ * FromUserName	 发送方帐号（一个OpenID）
+ * CreateTime	 消息创建时间 （整型）
+ * MsgType	     voice
+ * MediaId       use this to download the multimedia file
+ * Format        like amr or speex etc.
+ * MsgId	     消息id，64位整型
+ */
+Weixin.prototype.parseVoiceMsg = function() {
+	var msg = {
+		"toUserName" : this.data.ToUserName[0],
+		"fromUserName" : this.data.FromUserName[0],
+		"createTime" : this.data.CreateTime[0],
+		"msgType" : this.data.MsgType[0],
+		"mediaId" : this.data.MediaId[0],
+		"format" : this.data.Format[0],
+		"msgId" : this.data.MsgId[0],
+	}
+	
+	emitter.emit("weixinVoiceMsg", msg);
 	
 	return this;
 }
@@ -311,6 +348,10 @@ Weixin.prototype.parse = function() {
 			
 		case 'image' : 
 			this.parseImageMsg();
+			break;
+
+		case 'voice' : 
+			this.parseVoiceMsg();
 			break;
 			
 		case 'location' : 
