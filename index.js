@@ -38,12 +38,12 @@ Weixin.prototype.checkSignature = function(req) {
 }
 
 // 每一个小时更新access token一次（两个小时后会过期）
-Weixin.prototype.refreshToken = function() {
+Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 	getToken();
 	setInterval(getToken, 3600000);
 
 	function getToken() {
-		var accessTokenURL = "https://api.wechat.com/cgi-bin/token?grant_type=client_credential&appid="+this.APP_ID+"&secret="+this.APP_SECRET;
+		var accessTokenURL = "https://api.wechat.com/cgi-bin/token?grant_type=client_credential&appid="+APP_ID+"&secret="+APP_SECRET;
 		var accessTokenOptions = {
 			method: "GET",
 			url: accessTokenURL,
