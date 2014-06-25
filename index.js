@@ -362,7 +362,7 @@ Weixin.prototype.sendNewsMsg = function(msg) {
 
 // ------------------- 发送客服消息 -----------------------
 // 发送文本消息
-Weixin.prototype.pushTextMsg = function(wechatId, successCallback) {
+Weixin.prototype.pushTextMsg = function(wechatId, message, successCallback) {
 	var self = this;
 	var pushChatURL = "https://api.wechat.com/cgi-bin/message/custom/send?access_token="+self.ACCESS_TOKEN;
 	var pushChatOptions = {
@@ -373,7 +373,7 @@ Weixin.prototype.pushTextMsg = function(wechatId, successCallback) {
 			"msgtype" : "text",
 			"text" :
 			{
-				"content" : formatted_message
+				"content" : message
 			}
 		})
 	};
@@ -382,10 +382,10 @@ Weixin.prototype.pushTextMsg = function(wechatId, successCallback) {
 		if (!error && response.statusCode == 200) {
 			bodyObject = JSON.parse(body);
 			if (bodyObject.errmsg === "ok") {
-				console.log("Message successfully delivered--" + formatted_message);
+				console.log("Message successfully delivered--" + message);
 				successCallback();
 			} else {
-				console.log("There was an error delivering the message: " + formatted_message);
+				console.log("There was an error delivering the message: " + message);
 			}
 		}
 	}
