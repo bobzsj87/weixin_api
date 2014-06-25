@@ -41,6 +41,7 @@ Weixin.prototype.checkSignature = function(req) {
 Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 	getToken();
 	setInterval(getToken, 3600000);
+	var self = this;
 
 	function getToken() {
 		var accessTokenURL = "https://api.wechat.com/cgi-bin/token?grant_type=client_credential&appid="+APP_ID+"&secret="+APP_SECRET;
@@ -53,11 +54,8 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 		function accessTokenCallback (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				var data = JSON.parse(body);
-				console.log(body);
-				this.ACCESS_TOKEN = new Object();
-				this.ACCESS_TOKEN.access_token = data.access_token;
-				this.ACCESS_TOKEN.expiration = (new Date().getTime()) + (data.expires_in - 10) * 1000;
-				console.log("New access token retrieved: " + this.ACCESS_TOKEN.access_token);
+				self.ACCESS_TOKEN = data.access_token;
+				console.log("New access token retrieved: " + self.ACCESS_TOKEN);
 			}
 		}
 		request(accessTokenOptions, accessTokenCallback);
