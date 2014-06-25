@@ -37,7 +37,7 @@ Weixin.prototype.checkSignature = function(req) {
 	}
 }
 
-// 每一个小时更新access token一次
+// 每一个小时更新access token一次（两个小时后会过期）
 Weixin.prototype.refreshToken = function() {
 	getToken();
 	setInterval(getToken, 3600000);
@@ -52,6 +52,7 @@ Weixin.prototype.refreshToken = function() {
 		function accessTokenCallback (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				var data = JSON.parse(body);
+				console.log(body);
 				this.ACCESS_TOKEN = new Object();
 				this.ACCESS_TOKEN.access_token = data.access_token;
 				this.ACCESS_TOKEN.expiration = (new Date().getTime()) + (data.expires_in - 10) * 1000;
