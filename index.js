@@ -56,6 +56,8 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 				var data = JSON.parse(body);
 				self.ACCESS_TOKEN = data.access_token;
 				console.log("New access token retrieved: " + self.ACCESS_TOKEN);
+			} else {
+				console.log("There was an error retrieving the access token");
 			}
 		}
 		request(accessTokenOptions, accessTokenCallback);
