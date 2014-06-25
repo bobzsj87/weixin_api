@@ -1,5 +1,3 @@
-/// is this thing doing anything
-
 var sha1 = require('sha1'),
 	events = require('events'),
 	emitter = new events.EventEmitter(),
