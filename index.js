@@ -278,6 +278,11 @@ Weixin.prototype.parseEventMsg = function() {
 	return this;
 }
 
+// 获取多媒体文件的url
+Weixin.prototype.getMediaURL = function(media_id) {
+	return "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token="+this.ACCESS_TOKEN+"&media_id="+media_id;
+}
+
 // --------------------- 消息返回 -------------------------
 // 返回文字信息
 Weixin.prototype.sendTextMsg = function(msg) {
