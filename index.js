@@ -47,8 +47,7 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 		var accessTokenURL = "https://api.wechat.com/cgi-bin/token?grant_type=client_credential&appid="+APP_ID+"&secret="+APP_SECRET;
 		var accessTokenOptions = {
 			method: "GET",
-			encoding: "utf-8",
-			url: accessTokenURL,
+			url: accessTokenURL
 		};
 		console.log(accessTokenURL);
 
@@ -59,8 +58,6 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 				console.log("New access token retrieved: " + self.ACCESS_TOKEN);
 			} else {
 				console.log("There was an error retrieving the access token");
-				console.log(response);
-				console.log(body);
 			}
 		}
 		request(accessTokenOptions, accessTokenCallback);
