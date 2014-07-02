@@ -50,6 +50,7 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 			url: accessTokenURL
 		};
 		console.log(accessTokenURL);
+		var token_request_count = 0;
 
 		function accessTokenCallback (error, response, body) {
 			if (!error && response.statusCode == 200) {
@@ -58,6 +59,13 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 				console.log("New access token retrieved: " + self.ACCESS_TOKEN);
 			} else {
 				console.log("There was an error retrieving the access token");
+				if (token_request_count < 3) {
+					console.log("Trying again to retrieve the access token");
+					request(accessTokenOptions, accessTokenCallback);
+					token_request_count += 1;
+				} else {
+					console.log("Unable to retrieve the access token");
+				}
 			}
 		}
 		request(accessTokenOptions, accessTokenCallback);
@@ -391,6 +399,7 @@ Weixin.prototype.pushTextMsg = function(wechatId, message, successCallback) {
 				successCallback();
 			} else {
 				console.log("There was an error delivering the message: " + message);
+				console.log(body);
 			}
 		}
 	}
