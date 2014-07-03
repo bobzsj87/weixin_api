@@ -409,6 +409,39 @@ Weixin.prototype.pushTextMsg = function(wechatId, message, successCallback) {
 	request(pushChatOptions, pushChatCallback);
 }
 
+// 发送语音消息
+Weixin.prototype.pushVoiceMsg = function(wechatId, mediaId, successCallback) {
+	var self = this;
+	var pushVoiceURL = "https://api.wechat.com/cgi-bin/message/custom/send?access_token="+self.ACCESS_TOKEN;
+	var pushVoiceOptions = {
+		method: "POST",
+		url: pushVoiceURL,
+		body: JSON.stringify({
+			"touser" : wechatId,
+			"msgtype" : "voice",
+			"voice" : 
+			{
+				"media_id" : mediaId
+			}
+		})
+	};
+
+	function pushVoiceCallback (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			bodyObject = JSON.parse(body);
+			if (bodyObject.errmsg === "ok") {
+				console.log("Message successfully delivered--mediaID: " + mediaId);
+				successCallback();
+			} else {
+				console.log("There was an error delivering the message with mediaID: " + mediaId);
+				console.log(body);
+			}
+		}
+	}
+
+	request(pushVoiceOptions, pushVoiceCallback);
+}
+
 
 // ------------ 主逻辑 -----------------
 // 解析
