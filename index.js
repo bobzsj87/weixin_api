@@ -61,10 +61,12 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 			} else {
 				console.log("There was an error retrieving the access token");
 				console.log(body);
-				if (token_request_count < 3) {
-					console.log("Trying again to retrieve the access token");
-					request(accessTokenOptions, accessTokenCallback);
+				if (token_request_count < 100) {
+					console.log("Trying again in 5 seconds to retrieve the access token");
 					token_request_count += 1;
+					setTimeout(function() {
+						request(accessTokenOptions, accessTokenCallback);
+					}, 5000);
 				} else {
 					console.log("Unable to retrieve the access token");
 				}
