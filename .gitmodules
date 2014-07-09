@@ -1,0 +1,6 @@
+[submodule "wechat_node_firebase_client"]
+	path = examples/firebase/client
+	url = https://github.com/johnheroy/wechat_node_firebase_client
+[submodule "wechat_node_firebase_server"]
+	path = examples/firebase/server
+	url = https://github.com/johnheroy/wechat_node_firebase_server
