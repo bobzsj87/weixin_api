@@ -460,6 +460,38 @@ Weixin.prototype.pushVoiceMsg = function(wechatId, mediaId, successCallback) {
 	request(pushVoiceOptions, pushVoiceCallback);
 }
 
+// 发送图片消息
+Weixin.prototype.pushImageMsg = function(wechatId, mediaId, successCallback) {
+	var self = this;
+	var pushImageURL = "https://api.wechat.com/cgi-bin/message/custom/send?access_token="+self.ACCESS_TOKEN;
+	var pushImageOptions = {
+		method: "POST",
+		url: pushImageURL,
+		body: JSON.stringify({
+			"touser" : wechatId,
+			"msgtype" : "image",
+			"image" : 
+			{
+				"media_id" : mediaId
+			}
+		})
+	};
+
+	function pushImageCallback (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			bodyObject = JSON.parse(body);
+			if (bodyObject.errmsg === "ok") {
+				console.log("Message successfully delivered--mediaID: " + mediaId);
+				successCallback();
+			} else {
+				console.log("There was an error delivering the message with mediaID: " + mediaId);
+				console.log(body);
+			}
+		}
+	}
+
+	request(pushImageOptions, pushImageCallback);
+}
 
 // ------------ 主逻辑 -----------------
 // 解析
