@@ -76,6 +76,24 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 	}
 }
 
+// -------------- 创造自定义菜单 --------------------
+// 查看微信的文件怎么写这个菜单的 JSON
+Weixin.prototype.createMenu = function(menuJSON) {
+	var self = this;
+	var postMenuURL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + self.ACCESS_TOKEN;
+	var postMenuOptions = {
+		method: "POST",
+		url: postMenuURL,
+		body: menuJSON
+	};
+
+	function postMenuCallback(err, res, body) {
+		console.log("menu response " + res);
+	}
+
+	request(postMenuOptions, postMenuCallback);
+}
+
 // ------------------ 监听 ------------------------
 // 监听文本消息
 Weixin.prototype.textMsg = function(callback) {
