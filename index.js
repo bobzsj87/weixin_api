@@ -69,7 +69,7 @@ Weixin.prototype.initialize = function(APP_ID, APP_SECRET, menuJSON) {
 				};
 
 				function postMenuCallback(err, res, body) {
-					console.log("menu response " + res);
+					console.log("menu response " + body);
 				}
 
 				request(postMenuOptions, postMenuCallback);
