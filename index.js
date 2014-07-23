@@ -38,7 +38,8 @@ Weixin.prototype.checkSignature = function(req) {
 }
 
 // 每一个小时更新access token一次（两个小时后会过期）
-Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
+// 也会创造自定义菜单
+Weixin.prototype.initialize = function(APP_ID, APP_SECRET, menuJSON) {
 	getToken();
 	setInterval(getToken, 3600000);
 	var self = this;
@@ -58,6 +59,21 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 				var data = JSON.parse(body);
 				self.ACCESS_TOKEN = data.access_token;
 				console.log("New access token retrieved: " + self.ACCESS_TOKEN);
+
+				// now update the menu
+				var postMenuURL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + self.ACCESS_TOKEN;
+				var postMenuOptions = {
+					method: "POST",
+					url: postMenuURL,
+					body: menuJSON
+				};
+
+				function postMenuCallback(err, res, body) {
+					console.log("menu response " + res);
+				}
+
+				request(postMenuOptions, postMenuCallback);
+
 			} else {
 				console.log("There was an error retrieving the access token");
 				console.log(body);
@@ -74,24 +90,6 @@ Weixin.prototype.refreshToken = function(APP_ID, APP_SECRET) {
 		}
 		request(accessTokenOptions, accessTokenCallback);
 	}
-}
-
-// -------------- 创造自定义菜单 --------------------
-// 查看微信的文件怎么写这个菜单的 JSON
-Weixin.prototype.createMenu = function(menuJSON) {
-	var self = this;
-	var postMenuURL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + self.ACCESS_TOKEN;
-	var postMenuOptions = {
-		method: "POST",
-		url: postMenuURL,
-		body: menuJSON
-	};
-
-	function postMenuCallback(err, res, body) {
-		console.log("menu response " + res);
-	}
-
-	request(postMenuOptions, postMenuCallback);
 }
 
 // ------------------ 监听 ------------------------
