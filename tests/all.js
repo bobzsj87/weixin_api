@@ -1,0 +1,1 @@
+var weixin = require('../index');
